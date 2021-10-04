@@ -6,7 +6,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BibliotecaFSJ.Configuracao
+namespace BibliotecaFSJ.DAO.Contexto
 {
     public class ContextoBanco : DbContext
     {

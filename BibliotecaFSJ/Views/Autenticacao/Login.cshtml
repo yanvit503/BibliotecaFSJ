@@ -1,0 +1,42 @@
+﻿@using BibliotecaFSJ.ViewModels
+@model LoginViewModel
+
+@{
+    Layout = "_AutenticacaoLayout";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-5">
+                <div class="card-body p-4 p-sm-5">
+                    <h5 class="card-title text-center mb-5 fw-light fs-5">Biblioteca São José</h5>
+                    @using (Html.BeginForm("LoginPost", "Autenticacao",FormMethod.Post))
+                    {
+                        <div class="form-floating mb-3">
+                            @Html.TextBoxFor(x => x.Email,new { @type="email", @class= "form-control", @id = "floatingInput", @placeholder = "name@example.com" })
+                            @Html.LabelFor(x => x.Email, new { @for= "floatingInput" })
+                        </div>
+                        <div class="form-floating mb-3">
+                            @Html.TextBoxFor(x => x.Senha, new { @type = "password", @class = "form-control", @id = "floatingPassword", @placeholder = "Senha" })
+                            @Html.LabelFor(x => x.Senha, new { @for = "floatingPassword" })
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="" id="rememberPasswordCheck">
+                            <label class="form-check-label" for="rememberPasswordCheck">
+                                Lembrar de mim
+                            </label>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <input class="btn btn-primary btn-login text-uppercase fw-bold" type="submit" value="Entrar">
+                        </div>
+                        <div class="d-grid">
+                            @Html.ActionLink("Criar conta", "Cadastro", "Autenticacao", new { }, new { @class="btn btn-success btn-login text-uppercase fw-bold" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
