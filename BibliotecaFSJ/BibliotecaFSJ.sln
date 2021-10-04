@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaFSJ", "BibliotecaFSJ.csproj", "{BC7D622C-EEE6-4E68-B5F6-9CC8E6175F10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaFSJ.Models", "..\BibiotecaFSJ.Models\BibliotecaFSJ.Models.csproj", "{F86FC720-75F7-4B92-A5FF-80AFB54B711C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaFSJ.DAO", "..\BibliotecaFSJ.DAO\BibliotecaFSJ.DAO.csproj", "{64F65841-AE5F-4940-9F9E-26BB1914C6FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{BC7D622C-EEE6-4E68-B5F6-9CC8E6175F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC7D622C-EEE6-4E68-B5F6-9CC8E6175F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC7D622C-EEE6-4E68-B5F6-9CC8E6175F10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F86FC720-75F7-4B92-A5FF-80AFB54B711C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F86FC720-75F7-4B92-A5FF-80AFB54B711C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F86FC720-75F7-4B92-A5FF-80AFB54B711C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F86FC720-75F7-4B92-A5FF-80AFB54B711C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64F65841-AE5F-4940-9F9E-26BB1914C6FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64F65841-AE5F-4940-9F9E-26BB1914C6FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64F65841-AE5F-4940-9F9E-26BB1914C6FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64F65841-AE5F-4940-9F9E-26BB1914C6FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
