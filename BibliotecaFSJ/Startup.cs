@@ -35,6 +35,15 @@ namespace BibliotecaFSJ
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<Identity.ContextoIdentity>();
 
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/autenticacao/login");
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
+            });
+
             services.AddSession(o =>
             {
                 o.Cookie.HttpOnly = true;

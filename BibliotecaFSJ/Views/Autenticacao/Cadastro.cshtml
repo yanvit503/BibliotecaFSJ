@@ -6,6 +6,7 @@
     ViewData["Title"] = "Criar conta";
 }
 
+<link rel="stylesheet"  href="~/lib/password/password.css">
 <div class="container">
     <div class="row">
         <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
@@ -27,8 +28,12 @@
                             @Html.LabelFor(x => x.Email, new { @for = "floatingEmail" })
                         </div>
                         <div class="form-floating mb-3">
-                            @Html.TextBoxFor(x => x.Senha, new { @type = "password", @class = "form-control", @id = "floatingPassword", @placeholder = "Senha", @required = true })
-                            @Html.LabelFor(x => x.Senha, new { @for = "floatingPassword" })
+                            @Html.TextBoxFor(x => x.Senha, new { @type = "password", @class = "form-control", @id = "senha", @placeholder = "Senha", @required = true, @minlength = "6"})
+                            @Html.LabelFor(x => x.Senha, new { @for = "senha" })
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="confirmaSenha" placeholder="Repita a senha" required minlength="6"/>
+                            <label for="confirmaSenha">Repita a senha</label>
                         </div>
 
                         <div class="d-grid mb-3">
@@ -43,3 +48,28 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script src="~/lib/password/password.min.js"></script>
+
+    <script>
+        $('#senha').password({
+            minimumLength: 6,
+            showText: false,
+        });
+
+        $("#confirmaSenha").on("input", function () {
+            var senha = $("#senha").val();
+            var confirma = $("#confirmaSenha").val();
+
+            if (confirma != senha) {
+                $("#confirmaSenha").get(0).setCustomValidity("Senhas não coincidem");
+            } else {
+                $("#confirmaSenha").get(0).setCustomValidity("");
+                $("#confirmaSenha").get(0).setAttribute("isvalid", "true");
+            }
+        })
+    </script>
+
+}
