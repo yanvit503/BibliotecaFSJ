@@ -34,13 +34,24 @@
                         <div class="d-grid">
                             @Html.ActionLink("Criar conta", "Cadastro", "Autenticacao", new { }, new { @class = "btn btn-success btn-login text-uppercase fw-bold" })
                         </div>
-                    }                    
+                        <div class="d-grid">
+                            @Html.ActionLink("Esqueci senha", "EsqueciSenha", "Autenticacao", new { }, new { @class = "link-primary fw-bold" })
+                        </div>
+                    }
 
-                    @foreach (var erro in TempData)
+                    @foreach (var erro in TempData.Where(x => x.Key.Equals("erro")))
                     {
                         <br />
                         <div class="alert alert-warning fw-bold text-dark" role="alert">
                             @erro.Value
+                        </div>
+                    }
+
+                    @foreach (var info in TempData.Where(x => x.Key.Equals("info")))
+                    {
+                        <br />
+                        <div class="alert alert-info fw-bold text-dark" role="alert">
+                            @info.Value
                         </div>
                     }
                 </div>

@@ -1,0 +1,75 @@
+﻿@using BibliotecaFSJ.ViewModels
+@model RecupercaoSenhaViewModel
+@{
+    ViewData["Title"] = "Esqueci minha senha";
+    Layout = "~/Views/Shared/_AutenticacaoLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/lib/password/password.css">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-5">
+                <div class="card-body p-4 p-sm-5">
+                    @using (Html.BeginForm("NovaSenha", "Autenticacao", FormMethod.Post))
+                    {
+                        <h5 class="card-title text-center mb-5 fw-light fs-5">Recuperação de senha</h5>
+                        <div class="form-floating mb-3">
+                            @Html.TextBoxFor(x => x.Usuario, new { @class = "form-control", @id = "usuario", @placeholder = "Usuário", @required = true, @readonly = true })
+                            @Html.LabelFor(x => x.Usuario, new { @for = "usuario" })
+                        </div>
+                        <div class="form-floating mb-3">
+                            @Html.TextBoxFor(x => x.Senha, new { @type = "password", @class = "form-control", @id = "senha", @placeholder = "Senha", @required = true, @minlength = "6" })
+                            @Html.LabelFor(x => x.Senha, new { @for = "senha" })
+                        </div>
+                        <div class="d-none">
+                            @Html.TextBoxFor(x => x.Token)
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="confirmaSenha" placeholder="Repita a senha" required minlength="6" />
+                            <label for="confirmaSenha">Repita a senha</label>
+                        </div>
+                        <div class="d-grid mb-3">
+                            <input class="btn btn-primary btn-login text-uppercase fw-bold" type="submit" value="Mudar senha" />
+                        </div>
+                    }
+                    <div class="d-grid">
+                        @Html.ActionLink("Cancelar", "Login", "Autenticacao", new { }, new { @class = "link-primary fw-bold" })
+                    </div>
+                    @foreach (var erro in TempData)
+                    {
+                        <br />
+                        <div class="alert alert-warning fw-bold text-dark" role="alert">
+                            @erro.Value
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/password/password.min.js"></script>
+
+    <script>
+        $('#senha').password({
+            minimumLength: 6,
+            showText: false,
+        });
+
+        $("#confirmaSenha").on("input", function () {
+            var senha = $("#senha").val();
+            var confirma = $("#confirmaSenha").val();
+
+            if (confirma != senha) {
+                $("#confirmaSenha").get(0).setCustomValidity("Senhas não coincidem");
+            } else {
+                $("#confirmaSenha").get(0).setCustomValidity("");
+                $("#confirmaSenha").get(0).setAttribute("isvalid", "true");
+            }
+        })
+    </script>
+
+}
