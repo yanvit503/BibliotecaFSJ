@@ -1,0 +1,107 @@
+﻿@using BibliotecaFSJ.ViewModels
+@model ContaViewModel
+
+<link rel="stylesheet" href="~/lib/SweetAlert2/sweetalert2.css" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card border-0 shadow rounded-3 mt-0 mb-0">
+                <div class="card-body">
+                    <div class="text-center">
+                        <div id="imgDiv">
+                            <div class="but1">
+                                <img id="imagem" class="mb-2 imagem" style="border-radius: 50%; width: 150px; height: 150px;" src="@Model.ImagemUrl" alt="~/Imagens/usericon.jpg" />
+                                <button class="btn-floating" onclick="MudaImagem()"><i class="fas fa-camera"></i></button>
+                            </div>
+                        </div>
+                        @using (Html.BeginForm("MinhaConta", "Perfil", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.TextBoxFor(x => x.Id, new { @type = "text", @class = "d-none", @id = "floatingNome", @placeholder = "Nome", @required = true })
+
+                            <div class="form-floating m-3">
+                                @Html.TextBoxFor(x => x.Nome, new { @type = "text", @class = "form-control", @id = "floatingNome", @placeholder = "Nome", @required = true })
+                                @Html.LabelFor(x => x.Nome, new { @for = "floatingNome" })
+                            </div>
+                            <div class="form-floating m-3">
+                                @Html.TextBoxFor(x => x.Usuario, new { @type = "text", @class = "form-control", @id = "floatingUsuario", @placeholder = "Usuário", @required = true })
+                                @Html.LabelFor(x => x.Usuario, new { @for = "floatingUsuario" })
+                            </div>
+                            <div class="form-floating m-3">
+                                @Html.TextBoxFor(x => x.Email, new { @type = "email", @class = "form-control", @id = "floatingEmail", @placeholder = "name@example.com", @required = true })
+                                @Html.LabelFor(x => x.Email, new { @for = "floatingEmail" })
+                            </div>
+                            <input name="file" type="file" accept="image/*" style="display:none" id="inputImagem" onchange="document.getElementById('imagem').src = window.URL.createObjectURL(this.files[0])" />
+                            <div class="row">
+                                <div class="d-grid col-3">
+                                    @Html.ActionLink("Voltar", "Login", "Autenticacao", new { }, new { @class = "link-primary fw-bold mt-4" })
+                                </div>
+                                <div class="d-grid m-3 col-3">
+                                    <input class="btn btn-primary btn-login text-uppercase fw-bold" type="submit" value="Salvar">
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/SweetAlert2/sweetalert2.js"></script>
+
+    <script>
+        function MudaImagem() {
+            $("#inputImagem").trigger("click");
+        }
+
+        $(document).ready(function () {
+            @if(ViewBag.Msg != null)
+            {
+                <text>
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: '@ViewBag.Msg'
+                })
+                </text>
+            }
+        });
+
+    </script>
+}
+
+<style>
+    #imgDiv {
+        background-repeat: repeat-x;
+        margin-left: 20px;
+        margin-top: 13px;
+    }
+
+        #imgDiv .but1 {
+            line-height: 0px;
+            margin-top: 0px;
+            margin-left: 0px;
+            margin-right: 0px;
+            display: inline-block;
+            position: relative;
+        }
+
+            #imgDiv .but1 button {
+                width: 40px;
+                height: 40px;
+                position: absolute;
+                bottom: 15px;
+                right: 1px;
+                border-radius: 50%;
+                background-color: gainsboro
+            }
+</style>

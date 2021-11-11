@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BibliotecaFSJ</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -38,17 +39,16 @@
                     </ul>
                 </div>
                 <div class="dropdown">
-                    <a class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton1" aria-expanded="false">
-                        @UserManager.GetUserName(User)
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                    <img id="imagem" class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",UserManager.GetUserId(User),".jpg")' alt="~/Imagens/usericon.jpg" />
+
+                    <span class="m-2">@UserManager.GetUserName(User)</span>
+                    <div class="dropdown-content text-center">
+                        @Html.ActionLink("Minha conta","MinhaConta","Perfil",new { id = UserManager.GetUserId(User) },new { @class = "btn btn-outline-secondary" })
+                        @Html.ActionLink("Sair", "Sair", "Autenticacao",new {  },new { @class = "btn btn-outline-danger mt-2 mb-2" })
                     </div>
                 </div>
             </div>
-        </nav>
+        </nav>S
     </header>
     <div class="container">
         <main role="main" class="pb-3">

@@ -21,4 +21,8 @@
     <ProjectReference Include="..\BibliotecaFSJ.DAO\BibliotecaFSJ.DAO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Imagens\User\" />
+  </ItemGroup>
+
 </Project>
