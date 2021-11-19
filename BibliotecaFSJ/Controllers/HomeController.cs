@@ -1,4 +1,5 @@
-﻿using BibliotecaFSJ.Models;
+﻿using BibliotecaFSJ.DAO.DAO;
+using BibliotecaFSJ.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,13 @@ namespace BibliotecaFSJ.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var obj = new List<Topico>();
+            var ultimo = TopicoDAO.GetUltimo();
+
+            if(ultimo != null)
+                obj.Add(ultimo);
+
+            return View(obj);
         }
 
         public IActionResult Privacy()

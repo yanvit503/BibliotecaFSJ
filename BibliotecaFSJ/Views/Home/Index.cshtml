@@ -1,7 +1,40 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<Topico>
 
-<div class="text-center">
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-3">
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <div class="text-center">
+                    <h5 class="card-title">
+                        Criar tópico
+                    </h5>
+                </div>
+                <p class="text-justify">Crie um tópico e converse com as pessoas sobre o assunto que desejar.</p>
+                <div class="text-center">
+                    @Html.ActionLink("Começar", "Criar", "Topico", new { }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model != null)
+    {
+        @foreach (var topico in Model)
+        {
+            <div class="col-3">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h5 class="card-title">
+                                @topico.Titulo
+                            </h5>
+                        </div>
+                        <p class="text-justify">@topico.Texto</p>
+                        <div class="text-center">
+                            @Html.ActionLink("Ver", "Criar", "Topico", new { }, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
 </div>
