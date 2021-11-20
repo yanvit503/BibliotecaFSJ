@@ -13,6 +13,7 @@ namespace BibliotecaFSJ.DAO.Contexto
     {
         public DbSet<Livro> Livros { get; set; }
         public DbSet<Topico> Topicos { get; set; }
+        public DbSet<Tag> Tag { get; set; }
 
         public ContextoBanco() : base() { }
 

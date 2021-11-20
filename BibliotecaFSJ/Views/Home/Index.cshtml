@@ -30,7 +30,7 @@
                         </div>
                         <p class="text-justify">@topico.Texto</p>
                         <div class="text-center">
-                            @Html.ActionLink("Ver", "Criar", "Topico", new { }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("Ver", "Exibir", "Topico", new { topicoId = topico.Id }, new { @class = "btn btn-primary" })
                         </div>
                     </div>
                 </div>

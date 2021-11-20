@@ -2,17 +2,19 @@
 @model CriarTopicoViewModel
 
 <link href='https://cdn.jsdelivr.net/npm/froala-editor@4.0.1/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
+<link href='~/lib/Select2/select2.min.css' rel='stylesheet' type='text/css' />
 <input type="file" accept="image/*" style="display:none" id="inputImagem" onchange="adicionarImagem(window.URL.createObjectURL(this.files[0]))" />
 <div class="container">
     <div class="row">
         <div class="mx-auto">
+            <h5 class="ml-3">Criar um tópico</h5>
             <div class="card border-0 shadow rounded-3 mt-0 mb-0">
                 <div class="card-body">
-                    @*@using (Html.BeginForm("MinhaConta", "Perfil", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {*@
-                        <div class="m-3">
+                    @using (Html.BeginForm("MinhaConta", "Perfil", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="m-3 mt-0">
                             <label>Título :</label>
-                            @Html.TextBoxFor(x => x.Titulo, new { @type = "text",@id="titulo", @class = "form-control form-control-sm", @placeholder = "Digite algo", @required = true })
+                            @Html.TextBoxFor(x => x.Titulo, new { @type = "text", @id = "titulo", @class = "form-control form-control-sm", @placeholder = "Digite algo", @required = true })
                         </div>
                         <div class="m-3">
                             <label>Texto :</label>
@@ -27,15 +29,20 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>        
+                        </div>
+                        <div class="m-3">
+                            <label class="card-title">Adicionar tags :</label>
+                            <select class="form-control" multiple="multiple" id="tags">
+                            </select>
+                        </div>
                         <input type="file" accept="image/*" style="display:none" id="inputForm" />
-                    @*}*@
+                    }
                     <div class="row">
-                        <div class="d-grid col-3">
+                        <div class="d-grid m-3 col-3">
                             @Html.ActionLink("Voltar", "Login", "Autenticacao", new { }, new { @class = "link-primary fw-bold mt-4" })
                         </div>
                         <div class="d-grid m-3 col-3">
-                            <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit" value="Criar tópico" onclick="enviar()"></button>
+                            <button class="btn btn-success btn-login text-uppercase fw-bold" onclick="enviar()">Criar tópico</button>
                         </div>
                     </div>
                 </div>
@@ -48,18 +55,28 @@
 {
     <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@4.0.1/js/froala_editor.pkgd.min.js'></script>
     <script type='text/javascript' src='~/lib/Froala/pt_br.js'></script>
+    <script type='text/javascript' src='~/lib/Select2/select2.min.js'></script>
 
     <script>
         var arquivos = [];
         var editor;
 
         $(document).ready(function () {
+
+            $(document).ready(function () {
+                $('#tags').select2({
+                    multiple: true,
+                    tags: true,
+                    //dropdownParent: $('#myModal'),
+                    "language": {
+                        "noResults": function () { return ''; }
+                    }
+                });
+            });
+
             editor = new FroalaEditor('#texto', {
-
                 language: 'pt_br',
-                toolbarButtons: [['bold', 'italic', 'underline', 'fontFamily', 'fontSize', 'textColor'], ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'paragraphStyle'], ['undo', 'redo']]
-
-
+                toolbarButtons: [['bold', 'italic', 'underline', 'fontFamily', 'textColor'], ['alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'paragraphStyle'], ['undo', 'redo']]
             })
         });
 
@@ -72,6 +89,7 @@
 
             formData.append("titulo", $("#titulo").val());
             formData.append("texto", editor.html.get());
+            formData.append("tags", $("#tags").val());
             fetch('/topico/criar', { method: "POST", body: formData })
                 .then(function (response) {
                     if (response.ok) {

@@ -1,23 +1,25 @@
 ﻿using BibliotecaFSJ.DAO.Contexto;
 using BibliotecaFSJ.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BibliotecaFSJ.DAO.DAO
 {
-    public static class TopicoDAO
+    public class TagDAO
     {
-        public static async Task<Topico> GetById(int id)
+        public static List<Tag> GetByTopico(int topicoId)
         {
             try
             {
                 using (var context = new ContextoBanco())
                 {
-                    var result = await context.Topicos.Include(x=>x.Tags).FirstOrDefaultAsync(x => x.Id.Equals(id));
+                    var results = context.Tag.Where(x => x.TopicoId.Equals(topicoId)).ToList();
+                    int qnt = results.Count;
 
-                    return result;
+                    return qnt > 0 ? results : null;
                 }
             }
             catch
@@ -26,13 +28,13 @@ namespace BibliotecaFSJ.DAO.DAO
             }
         }
 
-        public static async Task<bool> Gravar(Topico topico)
+        public static async Task<bool> Gravar(Tag tag)
         {
             try
             {
                 using (var context = new ContextoBanco())
                 {
-                    await context.Topicos.AddAsync(topico);
+                    await context.Tag.AddAsync(tag);
                     int qnt = await context.SaveChangesAsync();
 
                     return qnt > 0 ? true : false;
@@ -44,20 +46,26 @@ namespace BibliotecaFSJ.DAO.DAO
             }
         }
 
-        public static Topico GetUltimo()
+        public static async Task<bool> Gravar(List<Tag> tags)
         {
             try
             {
                 using (var context = new ContextoBanco())
                 {
-                    return context.Topicos.FirstOrDefault();
+                    foreach (Tag tag in tags)
+                    {
+                        await context.Tag.AddAsync(tag);
+                    }
+
+                    int qnt = await context.SaveChangesAsync();
+
+                    return qnt > 0 ? true : false;
                 }
             }
-            catch(Exception e)
+            catch
             {
-                return null;
+                return false;
             }
         }
-
     }
 }

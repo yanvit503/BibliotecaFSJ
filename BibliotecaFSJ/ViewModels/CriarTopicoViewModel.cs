@@ -9,5 +9,6 @@ namespace BibliotecaFSJ.ViewModels
     {
         public string Titulo { get; set; }
         public string Texto { get; set; }
+        public List<string> Tags { get; set; }
     }
 }
