@@ -1,17 +1,15 @@
 ﻿@using BibliotecaFSJ.ViewModels
-@model CriarTopicoViewModel
+@model TopicoViewModel
 
 <link href='https://cdn.jsdelivr.net/npm/froala-editor@4.0.1/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
 <link href='~/lib/Select2/select2.min.css' rel='stylesheet' type='text/css' />
-<input type="file" accept="image/*" style="display:none" id="inputImagem" onchange="adicionarImagem(window.URL.createObjectURL(this.files[0]))" />
+<input type="file" accept="image/*" style="display:none" id="inputImagemTopico" onchange="adicionarImagem(window.URL.createObjectURL(this.files[0]))" />
 <div class="container">
     <div class="row">
         <div class="mx-auto">
             <h5 class="ml-3">Criar um tópico</h5>
             <div class="card border-0 shadow rounded-3 mt-0 mb-0">
                 <div class="card-body">
-                    @using (Html.BeginForm("MinhaConta", "Perfil", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
                         <div class="m-3 mt-0">
                             <label>Título :</label>
                             @Html.TextBoxFor(x => x.Titulo, new { @type = "text", @id = "titulo", @class = "form-control form-control-sm", @placeholder = "Digite algo", @required = true })
@@ -24,7 +22,7 @@
                             <label class="card-title">Adicionar imagens :</label>
                             <div class="card">
                                 <div class="card-body" id="galeria">
-                                    <button class="btn btn-primary" onclick="$('#inputImagem').trigger('click')">
+                                    <button class="btn btn-primary" onclick="$('#inputImagemTopico').trigger('click')">
                                         <i class="fas fa-plus fa-3x"></i>
                                     </button>
                                 </div>
@@ -35,11 +33,9 @@
                             <select class="form-control" multiple="multiple" id="tags">
                             </select>
                         </div>
-                        <input type="file" accept="image/*" style="display:none" id="inputForm" />
-                    }
                     <div class="row">
                         <div class="d-grid m-3 col-3">
-                            @Html.ActionLink("Voltar", "Login", "Autenticacao", new { }, new { @class = "link-primary fw-bold mt-4" })
+                            @Html.ActionLink("Voltar", "Index", "Home", new { }, new { @class = "link-primary fw-bold mt-4" })
                         </div>
                         <div class="d-grid m-3 col-3">
                             <button class="btn btn-success btn-login text-uppercase fw-bold" onclick="enviar()">Criar tópico</button>
@@ -99,7 +95,7 @@
         };
 
         function adicionarImagem(src) {
-            var inputImagem = document.getElementById('inputImagem');
+            var inputImagem = document.getElementById('inputImagemTopico');
             var img = new Image();
             img.src = src;
             img.width = 80; img.height = 80;
