@@ -7,42 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
-namespace BibliotecaFSJ.Controllers
+namespace BibliotecaFSJ.ControllersApi
 {
-    public class TopicoController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TopicoApiController : ControllerBase
     {
-        public async Task<IActionResult> Exibir(int topicoId)
-        {
-            Topico topico = await TopicoDAO.GetById(topicoId);
-            topico.Tags = TagDAO.GetByTopico(topicoId);
-
-            TopicoViewModel model = new TopicoViewModel
-            {
-                Texto = topico.Texto,
-                Titulo = topico.Titulo,
-                Tags = new List<string>(),
-                Imagens = new List<string>()
-            };
-
-            if(topico.Tags != null)
-                topico.Tags.ToList().ForEach(x => { model.Tags.Add(x.Texto); });
-
-            var imagens = await ImagemTopicoDAO.GetTopicoImagensByTopicoId(topicoId);
-
-            if(imagens != null)
-                imagens.ForEach(x => { model.Imagens.Add(x.Url); });
-
-            return View(model);
-        }
-
-        public IActionResult Criar()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> Criar(TopicoViewModel model)
         {
@@ -69,7 +41,7 @@ namespace BibliotecaFSJ.Controllers
             var resultFoto = await SalvaFoto(topico.Id, imagens);
 
             if (result && resultTag && resultFoto)
-                return RedirectToAction(nameof(Exibir), new { topicoId = topico.Id });
+                return Ok(topico.Id);
 
             return BadRequest();
         }
@@ -81,7 +53,7 @@ namespace BibliotecaFSJ.Controllers
                 int i = 0;
                 List<TopicoImagens> objs = new List<TopicoImagens>();
 
-                foreach(var file in files)
+                foreach (var file in files)
                 {
                     var fileName = topicoId + i + "." + file.FileName.Split('.')[1];
                     Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Imagens\Topico", topicoId.ToString()));
@@ -95,10 +67,10 @@ namespace BibliotecaFSJ.Controllers
                     }
                     i++;
                 }
-                
+
                 return await ImagemTopicoDAO.SalvarImagensTopico(objs);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return false;
             }
