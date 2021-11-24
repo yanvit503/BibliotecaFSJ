@@ -1,6 +1,11 @@
 ﻿@using BibliotecaFSJ.ViewModels
+@using BibliotecaFSJ.Controllers
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @model TopicoViewModel
 
+<link href='~/lib/SweetAlert2/sweetalert2.min.css' rel='stylesheet' type='text/css' />
 <div class="container">
     <div class="row">
         <div class="mx-auto">
@@ -43,6 +48,174 @@
                     </div>
                 </div>
             </div>
+
+            <h5 class="mt-3">Comentários :</h5>
+
+            <div class="card border-0 shadow rounded-3 mt-3">
+                <div class="card-body">
+                    <img class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",UserManager.GetUserId(User),".jpg")' alt="~/Imagens/usericon.jpg" />
+
+                    <span class="m-2">YanVit503</span> <span class="text-muted"> @DateTime.Now.ToString("dd/MM/yyyy")</span> <br />
+                    <div style="margin-left:5%">
+                        <div class="card border-0 shadow rounded-3">
+                            <div class="card-body">
+                                <input id="inputComentario" type="text" class="form-control pl-3" placeholder="Digite um comentário" /><br />
+                                <div class="d-flex justify-content-end" style="margin-top:5px">
+                                    <button class="btn btn-success" onclick="EnviarComentario()">Enviar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*COMENTÁRIOS CARREGADOS DO SERVER*@
+
+            <div id="comentarios">
+
+                @foreach (var comentario in Model.Comentarios)
+                {
+                    <div class="card border-0 shadow rounded-3 mt-3" id="@string.Concat("comentario",comentario.Id)">
+                        <div class="card-body">
+                            <img class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",comentario.IdAutor,".jpg")' alt="~/Imagens/usericon.jpg" />
+
+                            <span class="m-2">@PerfilController.GetUserNameById(comentario.IdAutor, UserManager).Result</span> <span class="text-muted"> @comentario.Horario.ToString("dd/MM/yyyy")</span>
+
+                            @if (UserManager.GetUserId(User) == comentario.IdAutor)
+                            {
+                                <div class="float-end">
+                                    <button class="rounded-circle btn btn-danger" title="Excluir comentário" onclick="ExcluirComentario(@comentario.Id)"><i class="fas fa-trash"></i></button>
+                                </div>
+                            }
+
+                            <br />
+                            <div style="margin-left:5%">
+                                <div class="card border-0 shadow rounded-3">
+                                    <div class="card-body">
+                                        <span class="pl-3">@comentario.Texto</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script type='text/javascript' src='~/lib/SweetAlert2/sweetalert2.min.js'></script>
+    <script>
+
+
+
+        async function ExcluirComentario(id) {
+
+            Swal.fire({
+                title: 'Tem certeza que deseja excluir o comentário?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: 'Excluir',
+                denyButtonText: 'Cancelar',
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+
+                    let formData = new FormData();
+                    formData.append("id", id);
+
+                    await fetch('/comentario/excluir', { method: "POST", body: formData })
+                        .then(async function (response) {
+                            var comentarioServer = await response.clone().json();
+                            if (response.ok) {
+                                $("#comentario" + comentarioServer.id).remove();
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                })
+
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Comentário excluido'
+                                })
+                            } else {
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                })
+
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: 'Ocorreu um erro ao excluir'
+                                })
+                            }
+                        });
+                }
+            })
+
+
+        }
+
+        async function EnviarComentario() {
+            var topicoId = @Model.Id;
+            var comentario = $("#inputComentario").val();
+
+            let formData = new FormData();
+            formData.append("idTopico", topicoId);
+            formData.append("texto", comentario);
+            formData.append("idAutor", "@UserManager.GetUserId(User)");
+
+            await fetch('/comentario/criar', { method: "POST", body: formData })
+                .then(async function (response) {
+                    var comentarioServer = await response.clone().json();
+                    if (response.ok) {
+
+                        var comentarioId = comentarioServer.id;
+
+                        var elemento = document.createElement('div');
+                        elemento.innerHTML =
+                            "<div class='card border-0 shadow rounded-3 mt-3' id='comentario" + comentarioId + "'>" +
+                            "<div class='card-body'>" +
+                            "<img class='imagem' style='border-radius: 50%; width: 45px; height: 45px;' src='@string.Concat("/Imagens/User/",UserManager.GetUserId(User),".jpg")' alt='~/Imagens/usericon.jpg' />" +
+
+                            "<span class='m-2'>@UserManager.GetUserName(User)</span> <span class='text-muted'> @DateTime.Now.ToString("dd/MM/yyyy")</span>"+
+
+                            "<div class='float-end'>" +
+                            "<button class='rounded-circle btn btn-danger' title='Excluir comentário' onclick='ExcluirComentario(" + comentarioId + ")'><i class='fas fa-trash'></i></button>" +
+                            "</div > "+
+                            "<div style='margin-left:5%'>" +
+                            "<div class='card border-0 shadow rounded-3'>" +
+                            "<div class='card-body'>" +
+                            "<span class='pl-3'>" + comentario + "</span>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div > ";
+
+                        $("#inputComentario").val('');
+                        $("#comentarios").prepend(elemento, $("#comentarios").firstChild);
+                        $("#comentario" + comentarioId).focus();
+                    }
+                    else {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        })
+
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Ocorreu um erro ao enviar'
+                        })
+                    }
+                });
+        }
+    </script>
+}

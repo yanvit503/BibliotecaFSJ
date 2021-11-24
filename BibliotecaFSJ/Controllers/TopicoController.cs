@@ -21,10 +21,12 @@ namespace BibliotecaFSJ.Controllers
 
             TopicoViewModel model = new TopicoViewModel
             {
+                Id = topicoId,
                 Texto = topico.Texto,
                 Titulo = topico.Titulo,
                 Tags = new List<string>(),
-                Imagens = new List<string>()
+                Imagens = new List<string>(),
+                Comentarios = new List<Comentario>()
             };
 
             if(topico.Tags != null)
@@ -34,6 +36,8 @@ namespace BibliotecaFSJ.Controllers
 
             if(imagens != null)
                 imagens.ForEach(x => { model.Imagens.Add(x.Url); });
+
+            model.Comentarios = await ComentarioDAO.GetComentariosByTopico(topico.Id);
 
             return View(model);
         }

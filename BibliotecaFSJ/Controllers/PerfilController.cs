@@ -16,6 +16,12 @@ namespace BibliotecaFSJ.Controllers
             _userManager = userManager;
         }
 
+        public async static Task<string> GetUserNameById(string id, UserManager<IdentityUser> manager)
+        {
+            var usuario = await manager.FindByIdAsync(id);
+            return usuario.UserName;
+        }
+
         public async Task<IActionResult> MinhaConta(string id)
         {
             if (string.IsNullOrEmpty(id))

@@ -1,5 +1,4 @@
-﻿using BibiotecaFSJ.Models;
-using BibliotecaFSJ.Models;
+﻿using BibliotecaFSJ.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,10 +10,10 @@ namespace BibliotecaFSJ.DAO.Contexto
 {
     public class ContextoBanco : DbContext
     {
-        public DbSet<Livro> Livros { get; set; }
         public DbSet<Topico> Topicos { get; set; }
         public DbSet<Tag> Tag { get; set; }
         public DbSet<TopicoImagens> TopicoImagens { get; set; }
+        public DbSet<Comentario> Comentarios { get; set; }
 
         public ContextoBanco() : base() { }
 
