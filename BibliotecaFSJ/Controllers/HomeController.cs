@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,11 +24,14 @@ namespace BibliotecaFSJ.Controllers
 
         public IActionResult Index()
         {
-            var obj = new List<Topico>();
-            var ultimo = TopicoDAO.GetUltimo();
+            var obj = TopicoDAO.GetPaginaInicial().GroupBy(x => x.Id).Select(x => x.First()).ToList();
 
-            if(ultimo != null)
-                obj.Add(ultimo);
+            return View(obj);
+        }
+
+        public IActionResult Pesquisa(string query)
+        {
+            var obj = TopicoDAO.GetPesquisa(query).GroupBy(x => x.Id).Select(x => x.First()).ToList();
 
             return View(obj);
         }

@@ -20,10 +20,6 @@
                             @Html.TextBoxFor(x => x.Id, new { @type = "text", @class = "d-none", @id = "floatingNome", @placeholder = "Nome", @required = true })
 
                             <div class="form-floating m-3">
-                                @Html.TextBoxFor(x => x.Nome, new { @type = "text", @class = "form-control", @id = "floatingNome", @placeholder = "Nome", @required = true })
-                                @Html.LabelFor(x => x.Nome, new { @for = "floatingNome" })
-                            </div>
-                            <div class="form-floating m-3">
                                 @Html.TextBoxFor(x => x.Usuario, new { @type = "text", @class = "form-control", @id = "floatingUsuario", @placeholder = "Usuário", @required = true })
                                 @Html.LabelFor(x => x.Usuario, new { @for = "floatingUsuario" })
                             </div>

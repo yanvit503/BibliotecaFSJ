@@ -25,7 +25,7 @@
                                 {
                                     foreach (string caminho in Model.Imagens)
                                     {
-                                        <img src="@caminho" width="80" height="80" style="margin-right: 15px;">
+                                        <img src="@caminho" width="80" height="80" style="margin-right: 15px; cursor: pointer;" onclick="ExibeImagem(this.src)" >
                                     }
                                 }
                             </div>
@@ -109,7 +109,14 @@
     <script type='text/javascript' src='~/lib/SweetAlert2/sweetalert2.min.js'></script>
     <script>
 
-
+        function ExibeImagem(src) {
+            Swal.fire({
+                imageUrl: src,
+                imageWidth: 400,
+                imageHeight: 200,
+                showConfirmButton: false,
+            })
+        }
 
         async function ExcluirComentario(id) {
 

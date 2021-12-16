@@ -2,6 +2,7 @@
 using BibliotecaFSJ.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,6 +53,45 @@ namespace BibliotecaFSJ.DAO.DAO
                 {
                     return context.Topicos.FirstOrDefault();
                 }
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static List<Topico> GetPaginaInicial()
+        {
+            try
+            {
+                using (var context = new ContextoBanco())
+                {
+                    return context.Topicos.ToList();
+                }
+            }
+            catch(Exception e)
+            {
+                return null;
+            }
+        }
+
+        public static List<Topico> GetPesquisa(string valor)
+        {
+            var retorno = new List<Topico>();
+
+            try
+            {
+                using (var context = new ContextoBanco())
+                {
+                    retorno.AddRange(context.Topicos.Where(x => x.Texto.Contains(valor)));                   
+
+                    var idsTopicosTags = context.Tag.Where(x => x.Texto.Contains(valor)).Select(x => x.TopicoId).ToArray();
+
+                    retorno.AddRange(context.Topicos.Where(x => idsTopicosTags.Contains(x.Id)).ToList());
+
+                }
+
+                return retorno;
             }
             catch(Exception e)
             {

@@ -17,6 +17,14 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function handeInputPesquisa()
+        {
+            $("#linkPesquisa").attr("href", "/Home/Pesquisa?query=" + $("#inputPesquisa").val())
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </head>
 <body>
@@ -30,8 +38,14 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <input class="form-control form-control-sm" type="search" placeholder="Pesquisar assuntos">
+                        <li class="nav-item row">
+                            <div class="input-group">
+                                <input class="form-control form-control-sm" type="search" placeholder="Pesquisar assuntos" id="inputPesquisa" onchange="handeInputPesquisa()">
+                                <div class="input-group-append ml-2">
+                                    <a href="/Home/Pesquisa?query=" id="linkPesquisa" class="rounded btn btn-primary text-white "><i class="fas fa-search"></i></a>
+                                </div>
+                            </div>
+                            
                         </li>
                     </ul>
                 </div>
@@ -40,8 +54,8 @@
 
                     <span class="m-2">@UserManager.GetUserName(User)</span>
                     <div class="dropdown-content text-center">
-                        @Html.ActionLink("Minha conta","MinhaConta","Perfil",new { id = UserManager.GetUserId(User) },new { @class = "btn btn-outline-secondary" })
-                        @Html.ActionLink("Sair", "Sair", "Autenticacao",new {  },new { @class = "btn btn-outline-danger mt-2 mb-2" })
+                        @Html.ActionLink("Minha conta", "MinhaConta", "Perfil", new { id = UserManager.GetUserId(User) }, new { @class = "btn btn-outline-secondary" })
+                        @Html.ActionLink("Sair", "Sair", "Autenticacao", new { }, new { @class = "btn btn-outline-danger mt-2 mb-2" })
                     </div>
                 </div>
             </div>

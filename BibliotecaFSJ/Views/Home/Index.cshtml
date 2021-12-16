@@ -1,17 +1,20 @@
 ﻿@model List<Topico>
+@using System.Text.RegularExpressions;
 
 <div class="row">
-    <div class="col-3">
-        <div class="card shadow-lg">
+    <div class="col-auto mt-2">
+        <div class="card shadow-lg border-success" style="width: 15rem;height: 15rem">
             <div class="card-body">
                 <div class="text-center">
                     <h5 class="card-title">
                         Criar tópico
                     </h5>
                 </div>
-                <p class="text-justify">Crie um tópico e converse com as pessoas sobre o assunto que desejar.</p>
+                <p class="text-justify text-center pt-4">Crie um tópico e converse com as pessoas sobre o assunto que desejar.</p>
+            </div>
+            <div class="card-footer">
                 <div class="text-center">
-                    @Html.ActionLink("Começar", "Criar", "Topico", new { }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Começar", "Criar", "Topico", new { }, new { @class = "btn btn-success" })
                 </div>
             </div>
         </div>
@@ -20,15 +23,19 @@
     {
         @foreach (var topico in Model)
         {
-            <div class="col-3">
-                <div class="card shadow-lg">
+            //@if (topico.Texto.Length > 20) topico.Texto = Html.Raw(topico.Texto.Substring(20)).ToString();
+
+            <div class="col-auto mt-2">
+                <div class="card shadow-lg" style="width: 15rem;height: 15rem">
                     <div class="card-body">
                         <div class="text-center">
-                            <h5 class="card-title">
+                            <h5 class="card-title text-truncate d-inline-block" style="max-width: 250px;">
                                 @topico.Titulo
                             </h5>
                         </div>
-                        <p class="text-justify">@topico.Texto</p>
+                        <p class="text-justify" style="max-width: 255px; max-height:100px;">@Regex.Replace(topico.Texto, "<.*?>",String.Empty).Substring(0,110) ...</p>
+                    </div>
+                    <div class="card-footer">
                         <div class="text-center">
                             @Html.ActionLink("Ver", "Exibir", "Topico", new { topicoId = topico.Id }, new { @class = "btn btn-primary" })
                         </div>

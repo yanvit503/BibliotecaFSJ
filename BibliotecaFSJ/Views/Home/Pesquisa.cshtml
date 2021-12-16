@@ -1,0 +1,43 @@
+﻿@model List<Topico>
+@using System.Text.RegularExpressions;
+
+@{
+    ViewData["Title"] = "Pesquisa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="row">
+
+        @foreach (var topico in Model)
+        {
+
+            <div class="col-auto mt-2">
+                <div class="card shadow-lg" style="width: 15rem;height: 15rem">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h5 class="card-title text-truncate d-inline-block" style="max-width: 250px;">
+                                @topico.Titulo
+                            </h5>
+                        </div>
+                        <p class="text-justify" style="max-width: 255px; max-height:100px;">@Regex.Replace(topico.Texto, "<.*?>", String.Empty).Substring(0, 110) ...</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-center">
+                            @Html.ActionLink("Ver", "Exibir", "Topico", new { topicoId = topico.Id }, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+}
+else
+{
+    <p class="alert alert-warning text-black text-center">Oops ! Não foi encontrado nenhum resultado &#128533;</p>
+}
+

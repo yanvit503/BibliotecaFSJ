@@ -51,6 +51,7 @@ namespace BibliotecaFSJ.Controllers
         public async Task<IActionResult> Criar(TopicoViewModel model)
         {
             var imagens = Request.Form.Files.ToList();
+            model.Tags = model.Tags[0].Split(',').ToList();
 
             Topico topico = new Topico
             {
@@ -70,7 +71,12 @@ namespace BibliotecaFSJ.Controllers
             var resultTag = await TagDAO.Gravar(tags);
 
             //depois de gravar o topico e as tags, grava as imagens
-            var resultFoto = await SalvaFoto(topico.Id, imagens);
+            bool resultFoto = false;
+
+            if (imagens.Count > 0)
+                resultFoto = await SalvaFoto(topico.Id, imagens);
+            else
+                resultFoto = true;
 
             if (result && resultTag && resultFoto)
                 return RedirectToAction(nameof(Exibir), new { topicoId = topico.Id });
