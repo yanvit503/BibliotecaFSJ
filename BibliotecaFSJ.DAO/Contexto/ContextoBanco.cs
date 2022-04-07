@@ -19,7 +19,7 @@ namespace BibliotecaFSJ.DAO.Contexto
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer("Server=66.45.233.11;Database=bibliotecafsj;User Id=sysdba;Password=masterKEY123;");
+            builder.UseSqlServer("Server=SQL8001.site4now.net;Database=db_a853b3_yanvit503;User Id=db_a853b3_yanvit503_admin;Password=s1n4ps#@;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -33,7 +33,14 @@
                                 @topico.Titulo
                             </h5>
                         </div>
-                        <p class="text-justify" style="max-width: 255px; max-height:100px;">@Regex.Replace(topico.Texto, "<.*?>",String.Empty).Substring(0,110) ...</p>
+                        @if (Regex.Replace(topico.Texto, "<.*?>",String.Empty).Length > 110)
+                        {
+                            <text><p class="text-justify" style="max-width: 255px; max-height:100px;">@Regex.Replace(topico.Texto, "<.*?>",String.Empty).Substring(0,110).Replace("Powered by Froala Editor","") ...</p></text>
+                        }
+                        else
+                        {
+                            <p class="text-justify" style="max-width: 255px; max-height:100px;">@Regex.Replace(topico.Texto, "<.*?>",String.Empty).Replace("Powered by Froala Editor","")</p>
+                        }
                     </div>
                     <div class="card-footer">
                         <div class="text-center">
