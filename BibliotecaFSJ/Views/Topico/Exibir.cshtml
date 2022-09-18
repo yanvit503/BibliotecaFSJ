@@ -25,7 +25,7 @@
                                 {
                                     foreach (string caminho in Model.Imagens)
                                     {
-                                        <img src="@caminho" width="80" height="80" style="margin-right: 15px; cursor: pointer;" onclick="ExibeImagem(this.src)" >
+                                        <img src="@caminho" width="80" height="80" style="margin-right: 15px; cursor: pointer;" onclick="ExibeImagem(this.src)">
                                     }
                                 }
                             </div>
@@ -73,13 +73,17 @@
 
             <div id="comentarios">
 
+                @*                <button >Teste</button>
+                *@
                 @foreach (var comentario in Model.Comentarios)
                 {
                     <div class="card border-0 shadow rounded-3 mt-3" id="@string.Concat("comentario",comentario.Id)">
                         <div class="card-body">
-                            <img class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",comentario.IdAutor,".jpg")' alt="~/Imagens/usericon.jpg" />
 
-                            <span class="m-2">@PerfilController.GetUserNameById(comentario.IdAutor, UserManager).Result</span> <span class="text-muted"> @comentario.Horario.ToString("dd/MM/yyyy")</span>
+                            <img id="@Url.Action("NovaMensagem","Mensagem",new {idUsuario = comentario.IdAutor})" data-toggle="popover" class="imagem" style="cursor:pointer; border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",comentario.IdAutor,".jpg")' alt="~/Imagens/usericon.jpg" />
+
+                            <span id="@Url.Action("NovaMensagem","Mensagem",new {idUsuario = comentario.IdAutor})" data-toggle="popover" style="cursor:pointer;" class="m-2">@PerfilController.GetUserNameById(comentario.IdAutor, UserManager).Result</span> <span class="text-muted"> @comentario.Horario.ToString("dd/MM/yyyy")</span>
+
 
                             @if (UserManager.GetUserId(User) == comentario.IdAutor)
                             {
@@ -105,9 +109,21 @@
 </div>
 
 @section Scripts
-{
-    <script type='text/javascript' src='~/lib/SweetAlert2/sweetalert2.min.js'></script>
+    {
+    <script type='text/javascript' src='/lib/SweetAlert2/sweetalert2.min.js'></script>
+    <script type='text/javascript' src='/lib/bootstrap/dist/js/bootstrap.bundle.js'></script>
     <script>
+
+        $(function () {
+            $('[data-toggle="popover"]').popover({
+                title: "OPÇÕES DE USUÁRIO",
+                content: function () {
+                    var id = $(this)[0].id
+                    return `<a href='${id}' class='btn btn-primary'> ✉ Enviar Mensagem</a>`;
+                },
+                html: true
+            })
+        })
 
         function ExibeImagem(src) {
             Swal.fire({
@@ -190,11 +206,11 @@
                             "<div class='card-body'>" +
                             "<img class='imagem' style='border-radius: 50%; width: 45px; height: 45px;' src='@string.Concat("/Imagens/User/",UserManager.GetUserId(User),".jpg")' alt='~/Imagens/usericon.jpg' />" +
 
-                            "<span class='m-2'>@UserManager.GetUserName(User)</span> <span class='text-muted'> @DateTime.Now.ToString("dd/MM/yyyy")</span>"+
+                            "<span class='m-2'>@UserManager.GetUserName(User)</span> <span class='text-muted'> @DateTime.Now.ToString("dd/MM/yyyy")</span>" +
 
                             "<div class='float-end'>" +
                             "<button class='rounded-circle btn btn-danger' title='Excluir comentário' onclick='ExcluirComentario(" + comentarioId + ")'><i class='fas fa-trash'></i></button>" +
-                            "</div > "+
+                            "</div > " +
                             "<div style='margin-left:5%'>" +
                             "<div class='card border-0 shadow rounded-3'>" +
                             "<div class='card-body'>" +
@@ -224,5 +240,14 @@
                     }
                 });
         }
+
+        $(document).ready(function () {
+            Swal.bindClickHandler()
+
+            Swal.mixin({
+                toast: true,
+            }).bindClickHandler('data-swal-toast-template')
+        });
+
     </script>
 }

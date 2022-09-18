@@ -38,6 +38,7 @@ namespace BibliotecaFSJ.Controllers
         {
             return View();
         }
+
         public async Task<IActionResult> ConfirmaEmail(string userId, string token)
         {
             var usuario = await _userManager.FindByIdAsync(userId);
@@ -113,8 +114,10 @@ namespace BibliotecaFSJ.Controllers
         [HttpPost]
         public async Task<IActionResult> Cadastrar(CadastroViewModel model)
         {
-            await IdentityCadastro.CadastrarUsuario(_userManager, model, this);
-            return RedirectToAction("Login");
+            if(await IdentityCadastro.CadastrarUsuario(_userManager, model, this))
+                return RedirectToAction("Login");
+
+            return BadRequest();
         }
     }
 }

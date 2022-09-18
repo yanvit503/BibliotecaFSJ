@@ -1,10 +1,5 @@
 ﻿using BibliotecaFSJ.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BibliotecaFSJ.DAO.Contexto
 {
@@ -19,12 +14,7 @@ namespace BibliotecaFSJ.DAO.Contexto
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer("Server=SQL8001.site4now.net;Database=db_a853b3_yanvit503;User Id=db_a853b3_yanvit503_admin;Password=s1n4ps#@;");
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-
+            builder.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=tcc;Integrated Security=True");
         }
     }
 }
