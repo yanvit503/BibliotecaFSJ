@@ -9,6 +9,8 @@ namespace BibliotecaFSJ.DAO.Contexto
         public DbSet<Tag> Tag { get; set; }
         public DbSet<TopicoImagens> TopicoImagens { get; set; }
         public DbSet<Comentario> Comentarios { get; set; }
+        public DbSet<Conversa> Conversas { get; set; }
+        public DbSet<Mensagem> Mensagens { get; set; }
 
         public ContextoBanco() : base() { }
 
