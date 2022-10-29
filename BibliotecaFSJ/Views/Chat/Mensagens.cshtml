@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity;
+@using BibliotecaFSJ.ViewModels;
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@model List<MensagemListaViewModel>
 
 @{
     Layout = "_Layout";
@@ -8,56 +10,90 @@
 
 <div class="row">
     <div class="col-3 border-end">
-        <a href="#" class="btn fw-bold">&#128229; Caixa de Entrada <span class="badge bg-danger text-white text-wrap"> 5 </span></a>
+        <a href="@Url.Action("CaixaEntrada","Chat",new { idUsuario = UserManager.GetUserId(User) })" class="btn fw-bold">&#128229; Caixa de Entrada</a>
     </div>
     <div class="col-9">
-        <div style="height:20rem; overflow-y: auto;overflow-x: hidden;">
-            <div class="mb-2 border-bottom">
-                <div class="row">
-                    <div class="col-1">
-                        <img class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",UserManager.GetUserId(User),".jpg")' alt="~/Imagens/usericon.jpg" />
+        <div id="Mensagens" style="height:20rem; overflow-y: auto;overflow-x: hidden;">
+            @foreach (var msg in Model)
+            {
+                <div class="mb-2 border-bottom">
+                    <div class="row">
+                        <div class="col-1">
+                            <img class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",msg.IdRemetente,".jpg")' alt="~/Imagens/usericon.jpg" />
+                        </div>
+                        <div class="col-9 fw-bold mt-2">@msg.NomeRemetente</div>
+                        <div class="col-2 mt-2 text-muted" style="font-size: .8rem">@msg.DataMensagem</div>
                     </div>
-                    <div class="col-9 fw-bold mt-2">yanvit503</div>
-                    <div class="col-2 mt-2 text-muted" style="font-size: .8rem">13/10/2022 17:00</div>
+                    <span>
+                        @msg.ConteudoMensagem
+                    </span>
                 </div>
-                <span>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                </span>
-            </div>
-
-            <div class="mb-2 border-bottom">
-                <div class="row">
-                    <div class="col-1">
-                        <img class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='https://53.fs1.hubspotusercontent-na1.net/hub/53/hubfs/Site%20owner%20turning%20images%20into%20links.jpg?width=595&height=400&name=Site%20owner%20turning%20images%20into%20links.jpg' alt="~/Imagens/usericon.jpg" />
-                    </div>
-                    <div class="col-9 fw-bold mt-2">seilá301</div>
-                    <div class="col-2 mt-2 text-muted" style="font-size: .8rem">13/10/2022 17:00</div>
-                </div>
-                <span>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                </span>
-            </div>
-
-            <div class="mb-2 border-bottom">
-                <div class="row">
-                    <div class="col-1">
-                        <img class="imagem" style="border-radius: 50%; width: 45px; height: 45px;" src='@string.Concat("/Imagens/User/",UserManager.GetUserId(User),".jpg")' alt="~/Imagens/usericon.jpg" />
-                    </div>
-                    <div class="col-9 fw-bold mt-2">yanvit503</div>
-                    <div class="col-2 mt-2 text-muted" style="font-size: .8rem">13/10/2022 17:00</div>
-                </div>
-                <span>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                </span>
-            </div>
+            }
         </div>
-
         <div class="p-2">
-            <textarea class="form-control" placeholder="Responda a mensagem aqui"></textarea>
+            <textarea class="form-control" id="conteudoMsg" placeholder="Responda a mensagem aqui"></textarea>
 
             <div class="mt-2">
-                <button class="btn btn-primary">Enviar &#x1f4e8</button>
+                <button class="btn btn-primary" onclick="EnviarMsg()">Enviar &#x1f4e8</button>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts
+    {
+    <script>
+        function EnviarMsg() {
+            var conteudoMsg = $("#conteudoMsg").val();
+
+            var msgObj =
+            {
+                idRemetente: '@UserManager.GetUserId(User)',
+                idDestinatario: '@ViewBag.Destinatario',
+                conversaId: '@ViewBag.IdConversa',
+                conteudo: conteudoMsg
+            }
+
+            fetch('/api/chatApi', {
+                method: "POST", body: JSON.stringify(msgObj), headers: { 'Content-Type': 'application/json' }
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        AppendMsg(msgObj)
+                    }
+                    else {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        })
+
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Ocorreu um erro ao enviar'
+                        })
+                    }
+                });
+        }
+
+        function AppendMsg(msg) {
+            $("#conteudoMsg").val('')
+
+            $("#Mensagens").append(`
+                <div class="mb-2 border-bottom">
+                    <div class="row" >
+                        <div class="col-1" >
+                            <img class="imagem" style = "border-radius: 50%; width: 45px; height: 45px;" src = '@string.Concat("/Imagens/User/",UserManager.GetUserId(User),".jpg")' alt = "~/Imagens/usericon.jpg" />
+                        </div>
+                        <div class="col-9 fw-bold mt-2"> @UserManager.GetUserName(User)</div>
+                        <div class="col-2 mt-2 text-muted" style = "font-size: .8rem"> ${new Date().toLocaleDateString("pt-BR") + " " + new Date().getHours() + ":" + new Date().getMinutes()}</div>
+                    </div>
+                    <span >
+                        ${msg.conteudo}
+                    </span>
+                </div>`)
+        }
+
+    </script>
+}

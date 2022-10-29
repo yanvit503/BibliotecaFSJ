@@ -4,14 +4,16 @@ using BibliotecaFSJ.DAO.Contexto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BibliotecaFSJ.DAO.Migrations
 {
     [DbContext(typeof(ContextoBanco))]
-    partial class ContextoBancoModelSnapshot : ModelSnapshot
+    [Migration("20221023172920_IdRemetente")]
+    partial class IdRemetente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +67,7 @@ namespace BibliotecaFSJ.DAO.Migrations
                     b.Property<string>("Conteudo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("ConversaId")
+                    b.Property<long?>("ConversaId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("Envio")
@@ -146,9 +148,7 @@ namespace BibliotecaFSJ.DAO.Migrations
                 {
                     b.HasOne("BibliotecaFSJ.Models.Conversa", "Conversa")
                         .WithMany("Mensagens")
-                        .HasForeignKey("ConversaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ConversaId");
 
                     b.Navigation("Conversa");
                 });

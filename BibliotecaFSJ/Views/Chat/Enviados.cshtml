@@ -15,7 +15,9 @@
         <br/>
         <br/>
 
-        <span class="fw-bold">&#128229; Caixa de Entrada <span class="badge bg-secondary text-white text-wrap"> @Model.Count </span></span>
+        <span class="fw-bold">&#128229; Caixa de Entrada <span class="badge bg-danger text-white text-wrap"> @Model.Count </span></span>
+        <a href="@Url.Action("Enviados","Chat",new { idUsuario = UserManager.GetUserId(User) })" class="btn fw-bold">📨 Enviados <span class="badge bg-danger text-white text-wrap"> 5 </span></a>
+
     </div>
     <div class="col-9">
         @foreach (ConversaListaViewModel conversa in Model)

@@ -55,7 +55,7 @@
 
                     <span class="m-2">@UserManager.GetUserName(User)</span>
                     <div class="dropdown-content text-center">
-                        <a href="#" class="btn btn-outline-secondary mt-2 mb-2">Mensagens <span class="badge bg-danger text-white text-wrap">5</span></a>
+                        <a href="@Url.Action("CaixaEntrada","Chat",new { idUsuario = UserManager.GetUserId(User) })" class="btn btn-outline-secondary mt-2 mb-2">Mensagens</a>
                         @Html.ActionLink("Minha conta", "MinhaConta", "Perfil", new { id = UserManager.GetUserId(User) }, new { @class = "btn btn-outline-secondary" })
                         @Html.ActionLink("Sair", "Sair", "Autenticacao", new { }, new { @class = "btn btn-outline-danger mt-2 mb-2" })
                     </div>
