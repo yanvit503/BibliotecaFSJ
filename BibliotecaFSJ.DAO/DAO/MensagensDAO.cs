@@ -23,7 +23,7 @@ namespace BibliotecaFSJ.DAO.DAO
 
                     foreach (var msg in mensagensUsuario)
                     {
-                        conversas.Add(await context.Conversas.FindAsync(msg.Conversa.Id));
+                        conversas.Add(await context.Conversas.FindAsync(msg.ConversaId));
                     }
                 }
 
@@ -43,7 +43,7 @@ namespace BibliotecaFSJ.DAO.DAO
 
                     foreach (var msg in mensagensUsuario)
                     {
-                        conversas.Add(await context.Conversas.FindAsync(msg.Conversa.Id));
+                        conversas.Add(await context.Conversas.FindAsync(msg.ConversaId));
                     }
                 }
 
@@ -57,8 +57,8 @@ namespace BibliotecaFSJ.DAO.DAO
             {
                 List<Mensagem> mensagens = new List<Mensagem>();
 
-                mensagens = await context.Mensagens.Include(x => x.Conversa)
-                    .Where(x => x.Conversa == new Conversa { Id = idConversa }).ToListAsync();
+                mensagens = await context.Mensagens
+                    .Where(x => x.ConversaId == idConversa).ToListAsync();
 
                 return mensagens.OrderBy(x => x.Envio).ToList();
             }
@@ -69,6 +69,16 @@ namespace BibliotecaFSJ.DAO.DAO
             using (var context = new ContextoBanco())
             {
                 mensagem.Envio = DateTime.Now;
+
+                if (mensagem.ConversaId == 0)
+                {
+                    var novaConversa = new Conversa();
+                    await context.Conversas.AddAsync(novaConversa);
+
+                    await context.SaveChangesAsync();
+
+                    mensagem.ConversaId = novaConversa.Id;
+                }
 
                 await context.Mensagens.AddAsync(mensagem);
 

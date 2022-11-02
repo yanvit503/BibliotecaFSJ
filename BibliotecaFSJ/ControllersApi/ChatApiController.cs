@@ -10,11 +10,19 @@ namespace BibliotecaFSJ.ControllersApi
     public class ChatApiController : ControllerBase
     {
         [HttpPost]
-        public async Task<Mensagem> EnviarMensagem(Mensagem mensagem)
+        public async Task<ActionResult<Mensagem>> EnviarMensagem(Mensagem mensagem)
         {
-            await MensagensDAO.EnviaMensagem(mensagem);
+            try
+            {
+                await MensagensDAO.EnviaMensagem(mensagem);
 
-            return mensagem;
+                return StatusCode(200, mensagem);
+            }
+            catch (System.Exception e)
+            {
+
+                throw e;
+            }
         }
     }
 }

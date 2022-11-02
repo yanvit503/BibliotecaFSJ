@@ -74,7 +74,7 @@ namespace BibliotecaFSJ.Controllers
                 model.Add(new MensagemListaViewModel { 
                     Id = msg.Id,
                     ConteudoMensagem = msg.Conteudo,
-                    IdConversa = msg.Conversa.Id,
+                    IdConversa = msg.ConversaId,
                     IdRemetente = msg.IdRemetente,
                     DataMensagem = msg.Envio.ToString("dd/MM/yyyy mm:HH"),
                     NomeRemetente = _userManager.FindByIdAsync(msg.IdRemetente).Result.UserName

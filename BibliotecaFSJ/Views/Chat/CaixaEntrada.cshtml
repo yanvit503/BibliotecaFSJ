@@ -7,17 +7,29 @@
     Layout = "_Layout";
 }
 
+<link href='~/lib/Select2/select2.min.css' rel='stylesheet' type='text/css' />
+<link href='~/lib/SweetAlert2/sweetalert2.min.css' rel='stylesheet' type='text/css' />
+
+<style>
+    .fixed {
+        position: fixed;
+        top: 50%;
+        right: 5%;
+        width: 100%;
+    }
+</style>
+
 <div class="row">
     <div class="col-3">
-        <a href="#" class="btn btn-outline-dark">
+        <a href="#" class="btn btn-outline-dark" onclick="abreEnviar()">
             &#9999; Escrever
         </a>
-        <br/>
-        <br/>
+        <br />
+        <br />
 
         <span class="fw-bold">&#128229; Caixa de Entrada <span class="badge bg-secondary text-white text-wrap"> @Model.Count </span></span>
     </div>
-    <div class="col-9">
+    <div class="col-9" style="height:110rem">
         @foreach (ConversaListaViewModel conversa in Model)
         {
             <a style="text-decoration: none;color : #171717" href="@Url.Action("Mensagens","Chat",new { idConversa = conversa.Id })">
@@ -30,3 +42,144 @@
         }
     </div>
 </div>
+
+<div class="fixed card" style="width: 25rem; height: 20rem;display:none" id="divEnviar">
+    <div class="card-header">
+        Enviar Mensagem
+        <span class="float-end" style="cursor: pointer" onclick="fechaEnviar()">&#10006;</span>
+    </div>
+    <div class="card-body bg-white">
+        <div class="row">
+            <div class="col">
+                Para: <select id="selectUsuario" class="form-control w-100"></select>
+            </div>
+            <div>
+                <span class="col">Mensagem: </span><textarea id="conteudoMsg" class="form-control  h-100"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-light">
+        <button class="mb-2 btn btn-primary" onclick="EnviarMsg()">Enviar &#x1f4e8</button>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script type='text/javascript' src='~/lib/Select2/select2.min.js'></script>
+    <script type='text/javascript' src='~/lib/SweetAlert2/sweetalert2.min.js'></script>
+
+    <script>
+        function abreEnviar() {
+            $("#divEnviar").show()
+            $('#selectUsuario').select2({
+                language: {
+                    errorLoading: function () {
+                        return 'Os resultados não puderam ser carregados.';
+                    },
+                    inputTooLong: function (args) {
+                        var overChars = args.input.length - args.maximum;
+
+                        var message = 'Apague ' + overChars + ' caracter';
+
+                        if (overChars != 1) {
+                            message += 'es';
+                        }
+
+                        return message;
+                    },
+                    inputTooShort: function (args) {
+                        var remainingChars = args.minimum - args.input.length;
+
+                        var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+                        return message;
+                    },
+                    loadingMore: function () {
+                        return 'Carregando mais resultados…';
+                    },
+                    maximumSelected: function (args) {
+                        var message = 'Você só pode selecionar ' + args.maximum + ' ite';
+
+                        if (args.maximum == 1) {
+                            message += 'm';
+                        } else {
+                            message += 'ns';
+                        }
+
+                        return message;
+                    },
+                    noResults: function () {
+                        return 'Nenhum resultado encontrado';
+                    },
+                    searching: function () {
+                        return 'Buscando…';
+                    },
+                    removeAllItems: function () {
+                        return 'Remover todos os itens';
+                    },
+                    removeItem: function () {
+                        return 'Remover item';
+                    },
+                    search: function () {
+                        return 'Buscar';
+                    }
+                },
+                ajax: {
+                    url: '/api/usuarioApi/GetCombo',
+                    dataType: 'json',
+                    data: function (params) {
+                        return {
+                            nome: params.term,
+                        };
+                    },
+                    processResults: function (data) {
+                        if (data.length > 0) {
+                            var usuario = data[0];
+                            return { results: [{ id: usuario.id, text: usuario.nome }] }
+                        }
+                        return data;
+                    }
+                },
+                minimumInputLength: 2
+            });
+        }
+
+        function fechaEnviar() {
+            $("#divEnviar").hide()
+        }
+
+        function EnviarMsg() {
+
+            var msgObj = {
+                idRemetente: '@UserManager.GetUserId(User)',
+                idDestinatario: $("#selectUsuario").val(),
+                conversaId: 0,
+                conteudo: $("#conteudoMsg").val()
+            }
+
+            fetch('/api/chatApi', {
+                method: "POST", body: JSON.stringify(msgObj), headers: { 'Content-Type': 'application/json' }
+            })
+                .then(async function (response) {
+                    if (response.ok) {
+                        var obj = await response.json()
+                        window.location.href = `/Chat/Mensagens?idConversa=${obj.conversaId}`
+                    }
+                    else {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                        })
+
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Ocorreu um erro ao enviar'
+                        })
+                    }
+                });
+        }
+
+    </script>
+}
